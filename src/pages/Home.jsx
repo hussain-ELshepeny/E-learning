@@ -10,7 +10,6 @@ import Testimonial from "../components/home-components/Testimonial"
 export default function Home() {
   return (
     <>
-      <Navbar />
       <main className="flex min-h-screen w-full flex-col pt-24 lg:pt-32 pb-10">
         <Hero />
         <Stats />
@@ -19,7 +18,6 @@ export default function Home() {
         <Testimonial />
         <CTA />
       </main>
-        <Footer />
     </>
   )
 }
