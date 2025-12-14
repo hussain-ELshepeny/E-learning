@@ -1,5 +1,4 @@
 import { GraduationCap } from "lucide-react"
-import { Link } from "react-router-dom";
 
 const Navbar = () => {
 
@@ -17,12 +16,12 @@ const Navbar = () => {
           </h2>
         </div>
         <nav className="hidden md:flex items-center gap-8">
-          <Link
+          <a
             className="text-sm font-medium hover:text-primary transition-colors dark:text-gray-300"
-            to="/exam"
+            href="#"
           >
             Courses
-          </Link>
+          </a>
           <a
             className="text-sm font-medium hover:text-primary transition-colors dark:text-gray-300"
             href="#"

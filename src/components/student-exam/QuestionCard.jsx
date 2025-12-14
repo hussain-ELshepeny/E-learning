@@ -1,5 +1,5 @@
 export default function QuestionCard() {
-    const type = 'short'; // mcq | boolean | short
+    const type = 'mcq'; // mcq | boolean | short
 
 
     return (
@@ -13,7 +13,7 @@ export default function QuestionCard() {
 
 
             {type === 'mcq' && (
-                <div className="space-y-3">
+                <div>
                     {['String', 'Number', 'Boolean', 'Character'].map(option => (
                         <label
                             key={option}
