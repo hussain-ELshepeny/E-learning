@@ -1,10 +1,9 @@
-import Home from "./pages/Home"
-import AuthPage from "./pages/AuthPage"
+import AppRoutes from "./routes/AppRoutes"
+
 const App = () => {
   return (
     <>
-      {/* <Home /> */}
-      <AuthPage />
+      <AppRoutes />
     </>
   )
 }
