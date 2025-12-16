@@ -17,8 +17,6 @@ const App = () => {
     <>
       <BrowserRouter>
         <QueryClientProvider client={client}>
-          <AppRoutes />
-
           {/* React Hot Toast Configuration */}
           <Toaster
             position="top-right"
@@ -80,6 +78,7 @@ const App = () => {
               },
             }}
           />
+          <AppRoutes />
         </QueryClientProvider>
       </BrowserRouter>
     </>

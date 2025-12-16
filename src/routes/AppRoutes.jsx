@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom"
 import AuthPage from "../pages/AuthPage"
+import StudentExamPage from "../pages/StudentExamPage"
 import Super from "../components/auth-components/Super"
 import Dashboard from "../components/dashboard-components/Dashboard"
 import AdminLayout from "../layout/AdminLayout"
@@ -10,6 +11,7 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<UserLayout />}>
         <Route index element={<Home />} />
+        <Route path="exam" element={<StudentExamPage />} />
       </Route>
       <Route element={<AdminLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
