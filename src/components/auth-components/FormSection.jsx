@@ -10,7 +10,7 @@ const FormSection = () => {
   const [authMode, setAuthMode] = useState("login")
 
   return (
-    <div className="flex w-full flex-col justify-center bg-surface-light dark:bg-surface-dark p-6 md:w-1/2 lg:w-7/12 md:p-10 lg:p-15 relative">
+    <div className="flex w-full flex-col justify-center bg-surface-light dark:bg-surface-dark p-5 md:w-1/2 lg:w-7/12 md:p-8 lg:p-13 relative">
       {/* Mobile Logo */}
       <div className="mb-8 flex items-center justify-center gap-2 md:hidden">
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-background-dark">
