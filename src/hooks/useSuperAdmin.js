@@ -1,22 +1,11 @@
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
 import toast from "react-hot-toast"
+import api from "../lib/axios"
 
 // API Function
 const createAdmin = async (data) => {
-  const token = localStorage.getItem("token")
-
-  const response = await axios.post(
-    "https://edu-master-psi.vercel.app/admin/create-admin",
-    data,
-    {
-      headers: {
-        token: token,
-        "Content-Type": "application/json",
-      },
-    }
-  )
-  console.log(response.data) // why isn't working 
+  const response = await api.post("/admin/create-admin", data)
+  console.log(response.data) // why isn't working
   return response.data
 }
 

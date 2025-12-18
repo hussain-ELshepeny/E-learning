@@ -9,9 +9,8 @@ export function useLogin() {
       navigate("/super")
     } else if (role === "admin") {
       navigate("/dashboard")
-    } else navigate("/")
+    } else if (role === "user") navigate("/")
   }
-
   const navigate = useNavigate()
 
   return useMutation({
