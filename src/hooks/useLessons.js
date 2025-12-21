@@ -8,9 +8,7 @@ import {
   getLessonByIdRequest,
 } from "../services/lesson.services"
 
-// ==========================================
-// 📚 Hook للحصول على جميع الدروس
-// ==========================================
+
 export const useGetLessons = (filters = {}) => {
   return useQuery({
     queryKey: ["lessons", filters], // t-p // p-jacket
@@ -20,9 +18,7 @@ export const useGetLessons = (filters = {}) => {
   })
 }
 
-// ==========================================
-// 📖 Hook للحصول على درس واحد
-// ==========================================
+
 export const useGetLessonById = (id) => {
   return useQuery({
     queryKey: ["lesson", id],
@@ -31,9 +27,7 @@ export const useGetLessonById = (id) => {
   })
 }
 
-// ==========================================
-// ➕ Hook لإنشاء درس جديد
-// ==========================================
+
 export const useCreateLesson = () => {
   const queryClient = useQueryClient()
 
@@ -61,9 +55,7 @@ export const useCreateLesson = () => {
   }
 }
 
-// ==========================================
-// ✏️ Hook لتحديث درس
-// ==========================================
+
 export const useUpdateLesson = () => {
   const queryClient = useQueryClient()
 
@@ -91,9 +83,7 @@ export const useUpdateLesson = () => {
   }
 }
 
-// ==========================================
-// 🗑️ Hook لحذف درس
-// ==========================================
+
 export const useDeleteLesson = () => {
   const queryClient = useQueryClient()
 
