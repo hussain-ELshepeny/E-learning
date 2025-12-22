@@ -12,7 +12,7 @@ import DeleteModal from "../../ui/DeleteModal"
 import LessonFilters from "../lessons/LessonFilters"
 
 const AdminLessons = () => {
-  // 📊 State Management
+  //  State Management
   const [filters, setFilters] = useState({
     classLevel: "",
     isPaid: "",
@@ -26,13 +26,13 @@ const AdminLessons = () => {
   const [selectedLesson, setSelectedLesson] = useState(null)
   const [formMode, setFormMode] = useState("create")
 
-  // 🎣 Hooks
+  //  Hooks
   const { data: lessonsData, isLoading, error } = useGetLessons(filters)
   const { createLesson, isLoading: isCreating } = useCreateLesson()
   const { updateLesson, isLoading: isUpdating } = useUpdateLesson()
   const { deleteLesson, isLoading: isDeleting } = useDeleteLesson()
 
-  // 📋 Table Columns Configuration
+  //  Table Columns Configuration
   const columns = [
     {
       header: "Title",
@@ -113,7 +113,7 @@ const AdminLessons = () => {
     },
   ]
 
-  // 🎯 Handlers
+  //  Handlers
   const handleOpenCreateForm = () => {
     setSelectedLesson(null)
     setFormMode("create")
@@ -165,7 +165,7 @@ const AdminLessons = () => {
     })
   }
 
-  // 🔧 Actions renderer
+  //  Actions renderer
   const renderActions = (row) => (
     <>
       <button
