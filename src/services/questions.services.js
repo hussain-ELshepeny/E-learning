@@ -8,22 +8,8 @@ const getSpecificQuestion = async (id) => {
   const response = await api.get(`/question/get/${id}`);
   return response.data;
 };
-const addQuestion = async ({
-  text,
-  type,
-  options,
-  correctAnswer,
-  exam,
-  points,
-}) => {
-  const response = await api.post("/question", {
-    text,
-    type,
-    options,
-    correctAnswer,
-    exam,
-    points,
-  });
+const addQuestion = async (data) => {
+  const response = await api.post("/question", data);
   return response.data;
 };
 const updateQuestion = async ({

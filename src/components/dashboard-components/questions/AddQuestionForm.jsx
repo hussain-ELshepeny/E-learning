@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-
+import { useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,35 +29,52 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PlusCircle } from "lucide-react";
-import { Label } from "../ui/label";
+import { Label } from "../../ui/label";
+import { useEffect, useState } from "react";
+import { useGetExams } from "@/hooks/useExams";
+import useAddQuestion from "@/hooks/useAddQuestion";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function AddQuestionForm() {
+  const [optionInput, setOptionInput] = useState("");
+  const [open, setOpen] = useState(false);
+
+  const exams = useGetExams();
+  const { mutateAsync: addQuestion, isPending: isAdding } = useAddQuestion();
   const form = useForm({
     defaultValues: {
       text: "",
       type: "short-answer",
-      options: "",
+      options: [],
       correctAnswer: "",
       exam: "",
       points: 1,
     },
   });
-
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "options",
+  });
   const type = form.watch("type");
+  useEffect(() => {
+    if (type === "multiple-choice") {
+      form.register("options");
+    } else {
+      form.unregister("options");
+    }
+  }, [type, form]);
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    await addQuestion(data);
     form.reset();
+    setOpen(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       {/* 🔘 Button that opens the dialog */}
       <DialogTrigger asChild>
-        <Button
-          className="ml-auto cursor-pointer text-base"
-          variant="secondary"
-        >
+        <Button className="ml-auto cursor-pointer text-base font-medium">
           <PlusCircle />
           Add New Question
         </Button>
@@ -123,24 +140,53 @@ export default function AddQuestionForm() {
             />
 
             {/* Options */}
-            <FormField
-              control={form.control}
-              name="options"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Options</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      disabled={
-                        type === "short-answer" || type === "true-false"
-                      }
-                      placeholder="Comma separated options"
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            {type === "multiple-choice" && (
+              <FormItem>
+                <FormLabel>Options</FormLabel>
+
+                <FormControl>
+                  <Input
+                    disabled={type !== "multiple-choice"}
+                    placeholder="Write option then click ADD"
+                    value={optionInput}
+                    onChange={(e) => setOptionInput(e.target.value)}
+                  />
+                </FormControl>
+
+                <Button
+                  type="button"
+                  onClick={() => {
+                    if (!optionInput) return;
+                    append({ value: optionInput.trim() });
+                    setOptionInput("");
+                  }}
+                >
+                  ADD
+                </Button>
+              </FormItem>
+            )}
+
+            {/* Render options list */}
+            {fields.map((item, index) => (
+              <li key={item.id} className="flex items-center justify-between">
+                <div className="flex gap-2">
+                  <span>
+                    Option
+                    {index + 1}:
+                  </span>
+                  <span>{item.value}</span>
+                </div>
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => remove(index)}
+                >
+                  ✕
+                </Button>
+              </li>
+            ))}
 
             {/* Correct Answer */}
             <FormField
@@ -181,7 +227,20 @@ export default function AddQuestionForm() {
                 <FormItem>
                   <FormLabel>Exam</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select Exam" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          {exams.data?.data?.map((exam) => (
+                            <SelectItem key={exam._id} value={exam._id}>
+                              {exam.title}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                 </FormItem>
               )}
@@ -207,7 +266,15 @@ export default function AddQuestionForm() {
             />
 
             <div className="flex justify-end gap-2">
-              <Button type="submit">Save</Button>
+              <Button type="submit" disabled={isAdding}>
+                {isAdding ? (
+                  <div className="flex gap-2">
+                    <Spinner /> <span>saving...</span>
+                  </div>
+                ) : (
+                  "Save"
+                )}
+              </Button>
             </div>
           </form>
         </Form>

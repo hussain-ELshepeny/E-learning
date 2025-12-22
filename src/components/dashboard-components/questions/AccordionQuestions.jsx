@@ -5,12 +5,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import useQuestions from "@/hooks/useQuestions";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import useDeleteQuestion from "@/hooks/useDeleteQuestion";
-import { Badge } from "../ui/badge";
-import { Spinner } from "../ui/spinner";
+import { Badge } from "../../ui/badge";
+import { Spinner } from "../../ui/spinner";
 
-export function AccordionDemo() {
+export default function AccordionQuestions() {
   const { data, isLoading, isError } = useQuestions();
   const { mutateAsync: deleteQuestion, isPending: isDeleting } =
     useDeleteQuestion();
