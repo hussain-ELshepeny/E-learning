@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom"
 import { registerRequest } from "../services/auth.services"
 // API Function
 
-// Custom Hook
 export const useRegister = () => {
   const navigate = useNavigate()
 

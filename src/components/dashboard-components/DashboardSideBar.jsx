@@ -10,11 +10,11 @@ import {
 
 const DashboardSidebar = () => {
   const navItems = [
-    {
-      icon: <MdOutlineDashboard />,
-      label: "Dashboard",
-      route: "", // index route
-    },
+    // {
+    //   icon: <MdOutlineDashboard />,
+    //   label: "Dashboard",
+    //   route: "", // index route
+    // },
     {
       icon: <MdOutlineMenuBook />,
       label: "Questions",

@@ -6,9 +6,9 @@ import Dashboard from "../components/dashboard-components/Dashboard"
 import AdminLayout from "../layout/AdminLayout"
 import Home from "../pages/Home"
 import UserLayout from "../layout/UserLayout"
-import AdminExams from "../components/dashboard-components/AdminExams"
-import AdminLessons from "../components/dashboard-components/AdminLessons"
-import AdminQuestions from "../components/dashboard-components/AdminQuestions"
+import AdminExams from "../components/dashboard-components/exams/AdminExams"
+import AdminLessons from "../components/dashboard-components/lessons/AdminLessons"
+import AdminQuestions from "../components/dashboard-components/questions/AdminQuestions"
 export default function AppRoutes() {
   return (
     <Routes>
