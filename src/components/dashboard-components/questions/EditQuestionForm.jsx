@@ -15,7 +15,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -28,27 +27,26 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { PlusCircle } from "lucide-react";
 import { Label } from "../../ui/label";
 import { useEffect, useState } from "react";
 import { useGetExams } from "@/hooks/useExams";
-import useAddQuestion from "@/hooks/useAddQuestion";
 import { Spinner } from "@/components/ui/spinner";
+import useEditQuestion from "@/hooks/useEditQuestion";
 
-export default function AddQuestionForm() {
+export default function EditQuestionForm({ question }) {
   const [optionInput, setOptionInput] = useState("");
   const [open, setOpen] = useState(false);
-
   const exams = useGetExams();
-  const { mutateAsync: addQuestion, isPending: isAdding } = useAddQuestion();
+  const { mutateAsync: EditQuestion, isPending: isEditting } =
+    useEditQuestion();
   const form = useForm({
     defaultValues: {
-      text: "",
-      type: "short-answer",
-      options: [],
-      correctAnswer: "",
-      exam: "",
-      points: 1,
+      text: question?.text || "",
+      type: question?.type || "short-answer",
+      options: question?.options || [],
+      correctAnswer: question?.correctAnswer || "",
+      exam: question?.exam || "",
+      points: question?.points || 1,
     },
   });
   const { fields, append, remove } = useFieldArray({
@@ -65,7 +63,7 @@ export default function AddQuestionForm() {
   }, [type, form]);
 
   const onSubmit = async (data) => {
-    await addQuestion(data);
+    await EditQuestion({ id: question._id, data });
     form.reset();
     setOpen(false);
   };
@@ -73,15 +71,17 @@ export default function AddQuestionForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="ml-auto cursor-pointer text-base font-medium">
-          <PlusCircle />
-          Add New Question
+        <Button
+          className="ml-auto cursor-pointer  font-medium"
+          variant="secondary"
+        >
+          Edit
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-lg animate-in fade-in zoom-in-95 glass-panel text-white border border-surface-dark">
         <DialogHeader className="border-b border-surface-dark pb-4">
-          <DialogTitle>Add New Question</DialogTitle>
+          <DialogTitle>Edit Question</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -264,8 +264,8 @@ export default function AddQuestionForm() {
             />
 
             <div className="flex justify-end gap-2">
-              <Button type="submit" disabled={isAdding}>
-                {isAdding ? (
+              <Button type="submit" disabled={isEditting}>
+                {isEditting ? (
                   <div className="flex gap-2">
                     <Spinner /> <span>saving...</span>
                   </div>
