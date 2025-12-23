@@ -1,4 +1,4 @@
-import DashboardNavLink from "./DashboardNavLink"
+import DashboardNavLink from "./DashboardNavLink";
 import {
   MdOutlineDashboard,
   MdOutlineSchool,
@@ -6,15 +6,15 @@ import {
   MdOutlinePeople,
   MdOutlineQuiz,
   MdOutlinePlayLesson,
-} from "react-icons/md"
+} from "react-icons/md";
 
 const DashboardSidebar = () => {
   const navItems = [
-    {
-      icon: <MdOutlineDashboard />,
-      label: "Dashboard",
-      route: "", // index route
-    },
+    // {
+    //   icon: <MdOutlineDashboard />,
+    //   label: "Dashboard",
+    //   route: "", // index route
+    // },
     {
       icon: <MdOutlineMenuBook />,
       label: "Questions",
@@ -30,7 +30,7 @@ const DashboardSidebar = () => {
       label: "Lessons",
       route: "lessons",
     },
-  ]
+  ];
 
   return (
     <aside className="hidden lg:flex flex-col w-72 h-full border-r border-slate-200 dark:border-white/10 bg-surface-light dark:bg-surface-dark/50 backdrop-blur-md">
@@ -43,7 +43,7 @@ const DashboardSidebar = () => {
             </span>
           </div>
           <div className="flex flex-col">
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <h1 className="text-xl font-bold tracking-tight text-primary dark:text-white">
               EduAdmin
             </h1>
             <p className="text-xs font-medium text-slate-500 dark:text-primary/80 uppercase tracking-wider">
@@ -93,7 +93,7 @@ const DashboardSidebar = () => {
         </button>
       </div>
     </aside>
-  )
-}
+  );
+};
 
-export default DashboardSidebar
+export default DashboardSidebar;
