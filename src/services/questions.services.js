@@ -12,23 +12,10 @@ const addQuestion = async (data) => {
   const response = await api.post("/question", data);
   return response.data;
 };
-const updateQuestion = async ({
-  id,
-  text,
-  type,
-  options,
-  correctAnswer,
-  exam,
-  points,
-}) => {
-  const response = await api.put(`/question/${id}`, {
-    text,
-    type,
-    options,
-    correctAnswer,
-    exam,
-    points,
-  });
+const updateQuestion = async ({ id, data }) => {
+  console.log(id);
+  console.log(data);
+  const response = await api.put(`/question/${id}`, data);
   return response.data;
 };
 const deleteQuestion = async (id) => {
