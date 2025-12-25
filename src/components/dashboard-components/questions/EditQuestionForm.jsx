@@ -34,17 +34,17 @@ import { Spinner } from "@/components/ui/spinner";
 import useEditQuestion from "@/hooks/useEditQuestion";
 
 export default function EditQuestionForm({ question }) {
-  console.log(question);
   const [optionInput, setOptionInput] = useState("");
   const [open, setOpen] = useState(false);
   const exams = useGetExams();
   const { mutateAsync: EditQuestion, isPending: isEditting } =
     useEditQuestion();
+
   const form = useForm({
     defaultValues: {
       text: question?.text || "",
       type: question?.type || "short-answer",
-      options: question?.options || [],
+      options: question?.options?.map((value) => ({ value })) || [],
       correctAnswer: question?.correctAnswer || "",
       exam: question?.exam || "",
       points: question?.points || 1,
@@ -54,7 +54,7 @@ export default function EditQuestionForm({ question }) {
     control: form.control,
     name: "options",
   });
-  console.log(fields);
+  console.log("this is the fields variable", fields);
   const type = form.watch("type");
   useEffect(() => {
     if (type === "multiple-choice") {
