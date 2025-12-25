@@ -33,7 +33,32 @@ export default function AccordionQuestions() {
               <Badge className="ml-auto">{q.type}</Badge>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 text-balance text-slate-400">
-              <p>{q.correctAnswer}</p>
+              <p>
+                <span className="font-medium text-lg text-secondary mr-1">
+                  Correct Answer :
+                </span>
+                <span className="text-base font-medium text-green-300">
+                  {q.correctAnswer}
+                </span>
+              </p>
+              {q.type === "multiple-choice" && (
+                <p>
+                  <span className="font-medium text-lg text-secondary mr-1">
+                    Options :
+                  </span>
+                  <span className="text-base font-medium text-green-300">
+                    {q.options?.join(", ")}
+                  </span>
+                </p>
+              )}
+              <p>
+                <span className="font-medium text-lg text-secondary mr-1">
+                  Points :
+                </span>
+                <span className="text-base font-medium text-green-300">
+                  {q.points}
+                </span>
+              </p>
               <div className="flex justify-end gap-2">
                 <EditQuestionForm question={q} />
                 <Button
