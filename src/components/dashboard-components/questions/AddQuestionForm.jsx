@@ -54,17 +54,23 @@ export default function AddQuestionForm() {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "options",
+    shouldUnregister: true,
   });
   const type = form.watch("type");
+
   useEffect(() => {
     if (type === "multiple-choice") {
       form.register("options");
     } else {
       form.unregister("options");
+      remove(); // clear options array when not multiple choice
     }
-  }, [type, form]);
+  }, [type, form, remove]);
 
   const onSubmit = async (data) => {
+    if (data.type !== "multiple-choice") {
+      delete data.options;
+    }
     await addQuestion(data);
     form.reset();
     setOpen(false);
@@ -165,26 +171,31 @@ export default function AddQuestionForm() {
             )}
 
             {/* Render options list */}
-            {fields.map((item, index) => (
-              <li key={item.id} className="flex items-center justify-between">
-                <div className="flex gap-2">
-                  <span>
-                    Option
-                    {index + 1}:
-                  </span>
-                  <span>{item.value}</span>
-                </div>
-
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => remove(index)}
+            <div className="flex flex-col gap-2 overflow-y-auto max-h-28">
+              {fields.map((item, index) => (
+                <li
+                  key={item.id}
+                  className="flex items-center justify-between "
                 >
-                  ✕
-                </Button>
-              </li>
-            ))}
+                  <div className="flex gap-2  ">
+                    <span>
+                      Option
+                      {index + 1}:
+                    </span>
+                    <span>{item.value}</span>
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => remove(index)}
+                  >
+                    ✕
+                  </Button>
+                </li>
+              ))}
+            </div>
 
             {/* Correct Answer */}
             <FormField

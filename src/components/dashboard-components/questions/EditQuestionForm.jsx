@@ -34,6 +34,7 @@ import { Spinner } from "@/components/ui/spinner";
 import useEditQuestion from "@/hooks/useEditQuestion";
 
 export default function EditQuestionForm({ question }) {
+  console.log(question);
   const [optionInput, setOptionInput] = useState("");
   const [open, setOpen] = useState(false);
   const exams = useGetExams();
@@ -53,6 +54,7 @@ export default function EditQuestionForm({ question }) {
     control: form.control,
     name: "options",
   });
+  console.log(fields);
   const type = form.watch("type");
   useEffect(() => {
     if (type === "multiple-choice") {
@@ -165,26 +167,28 @@ export default function EditQuestionForm({ question }) {
             )}
 
             {/* Render options list */}
-            {fields.map((item, index) => (
-              <li key={item.id} className="flex items-center justify-between">
-                <div className="flex gap-2">
-                  <span>
-                    Option
-                    {index + 1}:
-                  </span>
-                  <span>{item.value}</span>
-                </div>
+            <div className="flex flex-col gap-2 overflow-y-auto max-h-28">
+              {fields.map((item, index) => (
+                <li key={item.id} className="flex items-center justify-between">
+                  <div className="flex gap-2">
+                    <span>
+                      Option
+                      {index + 1}:
+                    </span>
+                    <span>{item.value}</span>
+                  </div>
 
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => remove(index)}
-                >
-                  ✕
-                </Button>
-              </li>
-            ))}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => remove(index)}
+                  >
+                    ✕
+                  </Button>
+                </li>
+              ))}
+            </div>
 
             {/* Correct Answer */}
             <FormField
