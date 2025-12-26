@@ -9,12 +9,19 @@ import { Button } from "../../ui/button";
 import useDeleteQuestion from "@/hooks/useDeleteQuestion";
 import { Badge } from "../../ui/badge";
 import { Spinner } from "../../ui/spinner";
+import EditQuestionForm from "./EditQuestionForm";
 
 export default function AccordionQuestions() {
   const { data, isLoading, isError } = useQuestions();
   const { mutateAsync: deleteQuestion, isPending: isDeleting } =
     useDeleteQuestion();
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex gap-4 text-white items-center justify-center h-60 text-2xl ">
+        <Spinner className="text-primary size-10" />
+        <span className="text-text-secondary">Loading Questions...</span>
+      </div>
+    );
   if (isError) return <div>Error loading questions.</div>;
   return (
     <Accordion type="single" collapsible className="w-full">
@@ -26,9 +33,34 @@ export default function AccordionQuestions() {
               <Badge className="ml-auto">{q.type}</Badge>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 text-balance text-slate-400">
-              <p>{q.correctAnswer}</p>
+              <p>
+                <span className="font-medium text-lg text-secondary mr-1">
+                  Correct Answer :
+                </span>
+                <span className="text-base font-medium text-green-300">
+                  {q.correctAnswer}
+                </span>
+              </p>
+              {q.type === "multiple-choice" && (
+                <p>
+                  <span className="font-medium text-lg text-secondary mr-1">
+                    Options :
+                  </span>
+                  <span className="text-base font-medium text-green-300">
+                    {q.options?.join(", ")}
+                  </span>
+                </p>
+              )}
+              <p>
+                <span className="font-medium text-lg text-secondary mr-1">
+                  Points :
+                </span>
+                <span className="text-base font-medium text-green-300">
+                  {q.points}
+                </span>
+              </p>
               <div className="flex justify-end gap-2">
-                <Button variant="secondary">Edit</Button>
+                <EditQuestionForm question={q} />
                 <Button
                   variant="destructive"
                   onClick={() => deleteQuestion(q._id)}

@@ -15,7 +15,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -28,50 +27,45 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { PlusCircle } from "lucide-react";
 import { Label } from "../../ui/label";
 import { useEffect, useState } from "react";
 import { useGetExams } from "@/hooks/useExams";
-import useAddQuestion from "@/hooks/useAddQuestion";
 import { Spinner } from "@/components/ui/spinner";
+import useEditQuestion from "@/hooks/useEditQuestion";
 
-export default function AddQuestionForm() {
+export default function EditQuestionForm({ question }) {
   const [optionInput, setOptionInput] = useState("");
   const [open, setOpen] = useState(false);
-
   const exams = useGetExams();
-  const { mutateAsync: addQuestion, isPending: isAdding } = useAddQuestion();
+  const { mutateAsync: EditQuestion, isPending: isEditting } =
+    useEditQuestion();
+
   const form = useForm({
     defaultValues: {
-      text: "",
-      type: "short-answer",
-      options: [],
-      correctAnswer: "",
-      exam: "",
-      points: 1,
+      text: question?.text || "",
+      type: question?.type || "short-answer",
+      options: question?.options?.map((value) => ({ value })) || [],
+      correctAnswer: question?.correctAnswer || "",
+      exam: question?.exam || "",
+      points: question?.points || 1,
     },
   });
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "options",
-    shouldUnregister: true,
   });
+  console.log("this is the fields variable", fields);
   const type = form.watch("type");
-
   useEffect(() => {
     if (type === "multiple-choice") {
       form.register("options");
     } else {
       form.unregister("options");
-      remove(); // clear options array when not multiple choice
     }
-  }, [type, form, remove]);
+  }, [type, form]);
 
   const onSubmit = async (data) => {
-    if (data.type !== "multiple-choice") {
-      delete data.options;
-    }
-    await addQuestion(data);
+    await EditQuestion({ id: question._id, data });
     form.reset();
     setOpen(false);
   };
@@ -79,15 +73,17 @@ export default function AddQuestionForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="ml-auto cursor-pointer text-base font-medium">
-          <PlusCircle />
-          Add New Question
+        <Button
+          className="ml-auto cursor-pointer  font-medium"
+          variant="secondary"
+        >
+          Edit
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-lg animate-in fade-in zoom-in-95 glass-panel text-white border border-surface-dark">
         <DialogHeader className="border-b border-surface-dark pb-4">
-          <DialogTitle>Add New Question</DialogTitle>
+          <DialogTitle>Edit Question</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -173,11 +169,8 @@ export default function AddQuestionForm() {
             {/* Render options list */}
             <div className="flex flex-col gap-2 overflow-y-auto max-h-28">
               {fields.map((item, index) => (
-                <li
-                  key={item.id}
-                  className="flex items-center justify-between "
-                >
-                  <div className="flex gap-2  ">
+                <li key={item.id} className="flex items-center justify-between">
+                  <div className="flex gap-2">
                     <span>
                       Option
                       {index + 1}:
@@ -275,8 +268,8 @@ export default function AddQuestionForm() {
             />
 
             <div className="flex justify-end gap-2">
-              <Button type="submit" disabled={isAdding}>
-                {isAdding ? (
+              <Button type="submit" disabled={isEditting}>
+                {isEditting ? (
                   <div className="flex gap-2">
                     <Spinner /> <span>saving...</span>
                   </div>

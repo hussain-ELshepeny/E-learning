@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
 
 @theme {
   /* Colors */
@@ -168,4 +167,12 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+.container{
+    @apply max-w-[1200px] mx-auto;
+}
+.MarginUp{
+    @apply mt-[7rem];
+.input{
+    @apply dark:bg-white focus-visible:border-none focus-visible:ring-primary/30 text-background-dark;}
 }
