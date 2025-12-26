@@ -9,26 +9,13 @@ const getSpecificQuestion = async (id) => {
   return response.data;
 };
 const addQuestion = async (data) => {
-  const response = await api.post("/question", data);
+  let body = { ...data, options: data.options.map((option) => option.value) };
+  const response = await api.post("/question", body);
   return response.data;
 };
-const updateQuestion = async ({
-  id,
-  text,
-  type,
-  options,
-  correctAnswer,
-  exam,
-  points,
-}) => {
-  const response = await api.put(`/question/${id}`, {
-    text,
-    type,
-    options,
-    correctAnswer,
-    exam,
-    points,
-  });
+const updateQuestion = async ({ id, data }) => {
+  let body = { ...data, options: data.options.map((option) => option.value) };
+  const response = await api.put(`/question/${id}`, body);
   return response.data;
 };
 const deleteQuestion = async (id) => {
