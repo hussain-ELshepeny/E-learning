@@ -1,11 +1,10 @@
-// src/components/LessonFilters.jsx
 import React, { useState } from 'react';
 import { Filter, X, ChevronDown } from 'lucide-react';
 
 const LessonFilters = ({ activeFilters, onFilterChange, onClearAll }) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    const classLevels = ['Grade 1 Secondary', 'Grade 2 Secondary', 'Grade 3 Secondary', 'Grade 4 Secondary'];
+    const classLevels = ['Grade 1 Secondary', 'Grade 2 Secondary', 'Grade 3 Secondary'];
     const paymentTypes = [
         { label: 'All', value: '' },
         { label: 'Paid Only', value: 'true' },

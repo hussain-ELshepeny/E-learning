@@ -12,7 +12,6 @@ import AdminQuestions from "../components/dashboard-components/questions/AdminQu
 import CourseLayout from "@/layout/CourseLayout.jsx";
 import LessonsHome from "@/pages/LessonsHome.jsx";
 import LessonDetails from "@/components/lessons/lessondetails/LessonDetails.jsx";
-import PaymentPage from "@/pages/PaymentPage.jsx";
 import VideoPlayer from "@/components/lessons/VideoPlay/VideoPlayer.jsx";
 
 export default function AppRoutes() {
@@ -24,7 +23,6 @@ export default function AppRoutes() {
         <Route path="/lessons" element={<CourseLayout />}>
             <Route index element={<LessonsHome />} />
             <Route path="/lessons/:id" element={<LessonDetails />} />
-            <Route path="/lessons/:id/payment" element={<PaymentPage />} />
             <Route path="/lessons/:id/play" element={<VideoPlayer />} />
         </Route>
       </Route>
