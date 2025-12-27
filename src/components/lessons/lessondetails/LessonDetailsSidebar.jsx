@@ -1,18 +1,14 @@
 import React from 'react'
-import {useNavigate} from "react-router-dom";
 import {
-    PlayCircle,
-
     Users,
     Star,
     Download,
     Share2,
-    CheckCircle2,
     MessageSquare,
 } from 'lucide-react';
 import ActionButton from "@/components/lessons/lessondetails/ActionButton.jsx";
 
-const LessonDetailsSidebar = ({lesson , id}) => {
+const LessonDetailsSidebar = ({lesson , id,isPurchased}) => {
 
 
     return (
@@ -26,11 +22,11 @@ const LessonDetailsSidebar = ({lesson , id}) => {
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-gray-200">Access</span>
                             <span className={`px-3 py-1 rounded-full text-sm ${
-                                lesson.isEnrolled
+                                !lesson.isPaid
                                     ? 'bg-emerald-500/20 text-emerald-400'
                                     : 'bg-amber-500/20 text-amber-400'
                             }`}>
-                              {lesson.isEnrolled ? 'Enrolled' : 'Not Enrolled'}
+                              {!lesson.isPaid ||isPurchased? 'Enrolled' : 'Not Enrolled'}
                             </span>
                         </div>
 
@@ -47,7 +43,7 @@ const LessonDetailsSidebar = ({lesson , id}) => {
                         )}
                     </div>
 
-                   <ActionButton lesson={lesson} id={id}/>
+                   <ActionButton lesson={lesson} id={id} isPurchased={isPurchased}/>
                 </div>
             </div>
 
@@ -60,7 +56,7 @@ const LessonDetailsSidebar = ({lesson , id}) => {
                         <Users className="w-5 h-5 text-primary" />
                         <div>
                             <p className="text-sm text-gray-300">Students Enrolled</p>
-                            <p className="text-white font-medium">{lesson.studentsEnrolled.toLocaleString()}</p>
+                            <p className="text-white font-medium">400</p>
                         </div>
                     </div>
 
@@ -69,7 +65,7 @@ const LessonDetailsSidebar = ({lesson , id}) => {
                         <div>
                             <p className="text-sm text-gray-300">Average Rating</p>
                             <div className="flex items-center gap-2">
-                                <span className="text-white font-medium">{lesson.rating}</span>
+                                <span className="text-white font-medium">4.2</span>
                                 <div className="flex">
                                     {[1, 2, 3, 4, 5].map((star) => (
                                         <Star

@@ -1,6 +1,5 @@
-// components/student/dashboard/QuickStats.tsx
 import { Card, CardContent } from '@/components/ui/card.jsx';
-import { TrendingUp, BookOpen, Clock, Award, Zap, Target, BarChart3, Trophy } from 'lucide-react';
+import { TrendingUp, Award, Zap, Target } from 'lucide-react';
 
 
 

@@ -1,13 +1,13 @@
 import React from 'react'
-import {CheckCircle2, DollarSign, Lock, PlayCircle} from "lucide-react";
+import {CheckCircle2, Lock, PlayCircle} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 
-const ActionButton = ({lesson,id}) => {
+const ActionButton = ({lesson,id,isPurchased}) => {
 
     const navigate = useNavigate();
 
     const handlePlay = () => {
-        if (lesson.isEnrolled) {
+        if (!lesson.isPaid ||isPurchased) {
             navigate(`/lessons/${id}/play`);
         } else {
             handleEnroll();
@@ -15,11 +15,11 @@ const ActionButton = ({lesson,id}) => {
     };
 
     const handleEnroll = () => {
-        navigate(`/lessons/${id}/payment`);
+        navigate(`/lessons`);
     };
     return (
         <div className="px-6 my-4">
-            {lesson.isEnrolled ? (
+            {!lesson.isPaid || isPurchased ? (
                 <div className="space-y-4">
                     {lesson.progress === 100 ? (
                         <div className="flex items-center justify-between">
@@ -29,7 +29,7 @@ const ActionButton = ({lesson,id}) => {
                             </div>
                             <button
                                 onClick={handlePlay}
-                                className="px-4 py-2 text-primary border border-primary/30 rounded-lg hover:bg-primary/10"
+                                className="px-4 py-2 text-primary border border-primary/30 rounded-lg hover:bg-primary/30"
                             >
                                 Review Again
                             </button>
@@ -62,8 +62,7 @@ const ActionButton = ({lesson,id}) => {
                         onClick={handlePlay}
                         className="w-full px-6 py-3 bg-gradient-to-r from-primary to-emerald-400 text-white rounded-lg font-medium hover:from-primary/90 hover:to-emerald-400/90"
                     >
-                        <DollarSign className="w-5 h-5 inline mr-2" />
-                        Enroll for ${lesson.price}
+                        Enroll for {lesson.price} EGP
                     </button>
 
                     {lesson.price > 0 && (

@@ -2,44 +2,30 @@ import React from 'react'
 import {
     BookOpen,
     Calendar,
-    CheckCircle2, Clock,
-    DollarSign,
+    Clock,
     Download,
     FileText,
-    Lock,
     MessageSquare,
     PlayCircle,
-    Star, User
+    User
 } from "lucide-react";
-import LessonDetailsHeader from "@/components/lessons/lessondetails/LessonDetailsHeader.jsx";
 import {useNavigate} from "react-router-dom";
 import ActionButton from "@/components/lessons/lessondetails/ActionButton.jsx";
-
-const LessonDetailsMain = ({lesson,id}) => {
+import {formatDate} from "@/lib/utils/index.js";
+const LessonDetailsMain = ({lesson,id,isPurchased}) => {
     const navigate = useNavigate();
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    };
-
     const handlePlay = () => {
-        if (lesson.isEnrolled) {
+        if (lesson.isPaid ||isPurchased) {
             navigate(`/lessons/${id}/play`);
-        } else {
-            handleEnroll();
+        }
+        else{
+            navigate(`/lessons`);
         }
     };
 
-    const handleEnroll = () => {
-        navigate(`/lessons/${id}/payment`);
-    };
 
     const extractYouTubeId = (url) => {
+        if (!url) return null;
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
         const match = url.match(regExp);
         return match && match[2].length === 11 ? match[2] : null;
@@ -60,26 +46,20 @@ const LessonDetailsMain = ({lesson,id}) => {
                                     {lesson.classLevel}
                                 </span>
                                 <span className="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-sm flex items-center gap-1">
-                                    $ {lesson.price}
+                                    {lesson.price} EGP
                                 </span>
                                 <span className="px-3 py-1 text-text-secondary border-2 border-surface-darker rounded-full text-sm">
-                                    {lesson.category}
+                                    {formatDate(lesson.createdAt)}
                                 </span>
                             </div>
                         </div>
-
-                        <div className="flex items-center text-amber-400">
-                            <Star className="w-5 h-5 fill-current" />
-                            <span className="ml-2 text-lg font-semibold">{lesson.rating}</span>
-                        </div>
                     </div>
-
                     <p className="text-gray-300">{lesson.description}</p>
                 </div>
 
                 {/* Video Player */}
                 <div className="relative aspect-video bg-black">
-                    {youtubeId ? (
+                    {youtubeId? (
                         <iframe
                             src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`}
                             className="absolute inset-0 w-full h-full"
@@ -104,15 +84,14 @@ const LessonDetailsMain = ({lesson,id}) => {
                                 className="px-6 py-3 bg-primary text-white rounded-lg font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors"
                                 onClick={handlePlay}
                             >
-                                {lesson.isEnrolled ? (
+                                {!lesson.isPaid ||isPurchased ? (
                                     <>
                                         <PlayCircle className="w-5 h-5" />
                                         Continue Learning
                                     </>
                                 ) : (
                                     <>
-                                        <DollarSign className="w-5 h-5" />
-                                        Enroll for ${lesson.price}
+                                        Enroll for {lesson.price} EGP
                                     </>
                                 )}
                             </button>
@@ -130,7 +109,7 @@ const LessonDetailsMain = ({lesson,id}) => {
                 </div>
 
                 {/* Action Buttons */}
-                <ActionButton lesson={lesson} id={id} />
+                <ActionButton lesson={lesson} id={id} isPurchased={isPurchased}/>
             </div>
 
             {/* Lesson Information */}
@@ -180,8 +159,8 @@ const LessonDetailsMain = ({lesson,id}) => {
                                     <Clock className="w-5 h-5 text-primary" />
                                 </div>
                                 <div>
-                                    <p className="text-sm text-text-secondary">Duration</p>
-                                    <p className={`text-white`}>{lesson.duration.hours}h {lesson.duration.mins}m</p>
+                                    <p className="text-sm text-text-secondary">created At</p>
+                                    <p className={`text-white`}>{formatDate(lesson.createdAt)}</p>
                                 </div>
                             </div>
 
@@ -191,63 +170,16 @@ const LessonDetailsMain = ({lesson,id}) => {
                                 </div>
                                 <div>
                                     <p className="text-sm text-text-secondary">Instructor</p>
-                                    <p className="text-white font-medium">{lesson.instructor}</p>
+                                    <p className="text-white font-medium">{lesson.createdBy}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Learning Objectives */}
-                    {lesson.learningObjectives && (
-                        <>
-                            <div className="h-px bg-dark-surfaceDarker" />
-                            <div>
-                                <h3 className="text-lg font-semibold text-white mb-4">What You'll Learn</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    {lesson.learningObjectives.map((objective, index) => (
-                                        <div key={index} className="flex items-start">
-                                            <CheckCircle2 className="w-5 h-5 text-emerald-400 mr-3 mt-0.5 flex-shrink-0" />
-                                            <span className="text-gray-300">{objective}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </>
-                    )}
-
-                    {/* Learning Materials */}
-                    {lesson.materials && (
-                        <>
-                            <div className="h-px bg-dark-surfaceDarker" />
-                            <div>
-                                <h3 className="text-lg font-semibold text-white mb-4">Learning Materials</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {lesson.materials.map((material, index) => (
-                                        <div
-                                            key={index}
-                                            className="p-4 bg-dark-surfaceDarker rounded-lg hover:bg-dark-surfaceDarker/80 transition-colors"
-                                        >
-                                            <div className="flex items-start gap-4">
-                                                <div className="p-2 bg-primary/20 rounded-lg">
-                                                    <FileText className="w-5 h-5 text-primary" />
-                                                </div>
-                                                <div className="flex-1">
-                                                    <p className="text-white font-medium">{material.name}</p>
-                                                    <p className="text-sm text-text-secondary">{material.type} • {material.size}</p>
-                                                </div>
-                                                <button className="p-2 text-text-secondary hover:text-white">
-                                                    <Download className="w-4 h-4" />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </>
-                    )}
                 </div>
             </div>
+
         </section>
     )
 }
-export default LessonDetailsMain
+export default LessonDetailsMain;

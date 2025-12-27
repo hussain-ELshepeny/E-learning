@@ -1,22 +1,23 @@
 import React from 'react'
 import {
-    PlayCircle,
     BookOpen,
     MoveLeft,
 } from "lucide-react";
-
 import {QuickStats} from "./QuickStats.jsx";
-import {Button} from "@/components/ui/button.jsx";
-import {useNavigate, useSearchParams} from 'react-router-dom';
-const CourseHeader = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
+import {useNavigate} from 'react-router-dom';
+
+const CourseHeader = ({classLevel,lessons,Purchasedlessons}) => {
     const navigate = useNavigate();
-    const classLevel = searchParams.get('classLevel') || 'Grade 1 Secondary';
+
     const stats = {
-        totalLessons: 24,
-        completedLessons: 15,
+        totalLessons: lessons.data.length,
+        enrolledLessons: Purchasedlessons.data.length,
+        completedLessons: lessons.data.filter(l => l.isEnrolled && l.progress === 100).length,
+        totalSpent: lessons.data.filter(l => l.isEnrolled && l.price > 0)
+            .reduce((sum, lesson) => sum + lesson.price, 0),
         averageScore: 85,
         streakDays: 7,
+        totalXP: 1245,
     };
     return (
         <header className={`p-2`}>
@@ -26,7 +27,9 @@ const CourseHeader = () => {
                         Welcome back 👋
                     </h1>
                     <p className="text-text-secondary">
-                        Continue your learning journey in {classLevel}
+                        {classLevel?
+                            `Continue your learning journey in ${classLevel}`:
+                        'Continue your learning journey'}
                     </p>
                 </div>
                 <QuickStats stats={stats} />
@@ -43,9 +46,9 @@ const CourseHeader = () => {
                         </h1>
                     </div>
 
-                    <div className="px-3 py-1 bg-surface-dark text-text-secondary rounded-full text-sm font-medium border border-primary/30">
+                    {classLevel?<div className="px-3 py-1 bg-surface-dark text-text-secondary rounded-full text-sm font-medium border border-primary/30">
                         {classLevel}
-                    </div>
+                    </div>:''}
                 </div>
 
                 <button

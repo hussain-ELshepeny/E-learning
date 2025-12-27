@@ -43,3 +43,13 @@ export const getLessonByIdRequest = async (id) => {
   const response = await api.get(`/lesson/${id}`)
   return response.data
 }
+export const getMyPurchasedLessons = async () => {
+    const response = await api.get(`lesson/my/purchased`)
+    return response.data
+}
+
+export const PayLesson = async (id) => {
+    const response = await api.post(`/lesson/pay/${id}`)
+    return response.data
+}
+

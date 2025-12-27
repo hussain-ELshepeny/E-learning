@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {Bell, Bookmark, ChevronLeft, Share2} from "lucide-react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const LessonDetailsHeader = () => {
     const navigate = useNavigate();

@@ -1,57 +1,78 @@
 import { CiClock1 } from "react-icons/ci"
-import { FaStar } from "react-icons/fa6"
 import { MdBarChart } from "react-icons/md"
+import { FaPlay } from "react-icons/fa";
 import React from "react";
 import { useNavigate } from 'react-router-dom';
 import {
     PlayCircle,
-    DollarSign,
     Calendar,
-    Clock,
-    Users,
-    Star,
-    CheckCircle2,
-    ChevronRight,
 } from 'lucide-react';
+import {formatDate} from "@/lib/utils/index.js";
+import {usePayLesson} from "@/hooks/useLessons.js";
+import ErrorCard from "@/components/lessons/ErrorCard.jsx";
+import Loader from "@/components/lessons/Loader.jsx";
 export default function CourseCard({
      id,
-    category,
-    rate,
+     video,
     title,
     desc,
-   duration,
+    createdAt,
    classLevel,
    price,
-   IsEnroll,
-   scheduledDate
+   isPaid,
+   scheduledDate,
+   Purchasedlessons,
+   notMyLessons
 }) {
     const navigate = useNavigate();
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric'
-        });
-    };
-
+    const { payLesson, isLoading ,error } = usePayLesson();
     const handleCardClick = () => {
-        navigate(`/lessons/${id}`);
-    };
-
-    const handleEnrollClick = (e) => {
-        // e.stopPropagation();
-        if (!IsEnroll) {
-            navigate(`/lessons/${id}/payment`);
+        if (!isPaid || Purchasedlessons) {
+            navigate(`/lessons/${id}`);
+        } else {
+            payLesson(id);
         }
     };
 
-    const handlePlayClick = (e) => {
-        // e.stopPropagation();
-        if (IsEnroll) {
+    const isPurchased = !notMyLessons?.some(lesson => lesson._id === id);
+
+    if(error){
+        return (
+            <ErrorCard error={error}/>
+        );
+    }
+
+    if(isLoading)return <Loader />;
+
+    const handleEnrollClick = () => {
+        if (isPaid) {
+            payLesson(id);
+        }
+    };
+
+    const handlePlayClick = () => {
+        if (!isPaid || Purchasedlessons) {
             navigate(`/lessons/${id}/play`);
         } else {
-            navigate(`/lessons/${id}/payment`);
+            payLesson(id);
         }
+    };
+
+    const getYouTubeVideoId = (url) => {
+        if (!url) return null;
+
+        const regExp =
+            /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+
+        const match = url.match(regExp);
+        return match ? match[1] : null;
+    };
+
+    const getYouTubeThumbnail = (url) => {
+        const videoId = getYouTubeVideoId(url);
+        return videoId
+            ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+            : "";
     };
 
     return (
@@ -59,30 +80,19 @@ export default function CourseCard({
             <div
                 onClick={handleCardClick}
             >
-                <div className="relative aspect-video w-full overflow-hidden">
-                    <div className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105">
-                        <iframe
-                            className="w-full h-full"
-                            src={`https://www.youtube.com/embed/`}
-                            title="YouTube video player"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        ></iframe>
-                    </div>
-                    <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-sm px-2 py-1 rounded-md">
-                  <span className="text-[10px] bg-background-dark p-2 rounded-md font-bold text-white uppercase tracking-wider">
-                    {category}
-                  </span>
+                <div className="relative w-full overflow-hidden">
+                    <div className="relative">
+                        <img
+                            src={getYouTubeThumbnail(video)}
+                            alt="Lesson thumbnail"
+                            className="w-full h-full object-cover rounded-t-lg"
+                        />
+                        <FaPlay className="absolute inset-0 m-auto w-12 h-12 text-background-dark" />
                     </div>
                 </div>
                 <div className="p-5 flex flex-col flex-1">
                     <div className="flex items-center gap-2 mb-3">
-                  <span className="material-symbols-outlined text-yellow-400 text-lg">
-                    <FaStar />
-                  </span>
-                        <span className="text-sm font-bold dark:text-white">{rate}</span>
-                        <div className="flex items-center text-sm text-gray-500">
+                      <div className="flex items-center text-sm text-gray-500">
                             <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
                             <span className="truncate">{formatDate(scheduledDate)}</span>
                         </div>
@@ -98,8 +108,8 @@ export default function CourseCard({
                         <span className="material-symbols-outlined text-slate-400 text-lg">
                           <CiClock1 />
                         </span>
-                            <span className="text-xs font-medium text-slate-500 dark:text-text-secondary">
-                          {`${duration?.hours}h ${duration?.mins}m`}
+                        <span className="text-xs font-medium text-slate-500 dark:text-text-secondary">
+                          {formatDate(createdAt)}
                         </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -114,13 +124,12 @@ export default function CourseCard({
                 </div>
             </div>
             <div className="p-6 pt-0">
-                {!IsEnroll? (
+                {isPaid && !Purchasedlessons && !isPurchased? (
                     <button
                         className="w-full px-4 py-3 bg-gradient-to-r from-primary to-emerald-400 text-white rounded-lg font-medium flex items-center justify-center hover:from-primary/90 hover:to-emerald-400/90 transition-all"
                         onClick={handleEnrollClick}
                     >
-                        <DollarSign className="w-4 h-4 mr-2" />
-                        Enroll for ${price}
+                        Enroll for {price} EGP
                     </button>
                 ) : (
                     <button

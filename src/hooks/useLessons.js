@@ -1,11 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import toast from "react-hot-toast"
 import {
-  getLessonsRequest,
-  createLessonRequest,
-  updateLessonRequest,
-  deleteLessonRequest,
-  getLessonByIdRequest,
+    getLessonsRequest,
+    createLessonRequest,
+    updateLessonRequest,
+    deleteLessonRequest,
+    getLessonByIdRequest, getMyPurchasedLessons,PayLesson
 } from "../services/lesson.services"
 
 
@@ -18,6 +18,12 @@ export const useGetLessons = (filters = {}) => {
   })
 }
 
+export const useGetMyPurchasedLessons = () => {
+    return useQuery({
+        queryKey: ["PurchasedLessons"],
+        queryFn: () => getMyPurchasedLessons(),
+    })
+}
 
 export const useGetLessonById = (id) => {
   return useQuery({
@@ -110,3 +116,33 @@ export const useDeleteLesson = () => {
     reset: mutation.reset,
   }
 }
+
+export const usePayLesson = () => {
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: PayLesson,
+        onSuccess: (data) => {
+            toast.success(data.message || "Redirecting to payment…");
+            if (data.url) {
+                window.location.href = data.url;
+            }
+            queryClient.invalidateQueries({ queryKey: ["lessons"] });
+        },
+        onError: (error) => {
+            const errorMessage =
+                error.response?.data?.message || "Failed to initiate payment";
+            toast.error(errorMessage);
+        },
+    });
+
+    return {
+        payLesson: mutation.mutate,
+        payLessonAsync: mutation.mutateAsync,
+        isLoading: mutation.isLoading,
+        isSuccess: mutation.isSuccess,
+        isError: mutation.isError,
+        error: mutation.error,
+        reset: mutation.reset,
+    };
+};

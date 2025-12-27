@@ -2,14 +2,11 @@ import React from 'react'
 
 const Loader = () => {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="p-4 border rounded-lg animate-pulse">
-                    <span className="block bg-background-dark h-40 w-full mb-3 rounded-md"></span>
-                    <span className="block bg-background-dark h-6 w-3/4 mb-2 rounded"></span>
-                    <span className="block bg-background-dark h-4 w-full rounded"></span>
-                </div>
-            ))}
+        <div className="min-h-screen bg-gradient-to-b from-dark-background to-dark-surfaceDarker flex items-center justify-center">
+            <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+                <p className="text-gray-400">Loading lesson...</p>
+            </div>
         </div>
     )
 }
